@@ -14,3 +14,34 @@ export const getQuizById = async (quizId) => {
   const quiz = await QuizCollection.findById(quizId);
   return quiz;
 };
+
+export const createQuiz = async (payload) => {
+  const quiz = await QuizCollection.create(payload);
+  return quiz;
+};
+
+export const deleteQuiz = async (quizId) => {
+  const quiz = await QuizCollection.findOneAndDelete({
+    _id: quizId,
+  });
+  return quiz;
+};
+
+export const updateQuiz = async (quizId, payload, options = {}) => {
+  const rawResult = await QuizCollection.findOneAndUpdate(
+    { _id: quizId },
+    payload,
+    {
+      new: true,
+      includeResultMetadata: true,
+      ...options,
+    },
+  );
+
+  if (!rawResult || !rawResult.value) return null;
+
+  return {
+    quiz: rawResult.value,
+    isNew: Boolean(rawResult?.lastErrorObject?.upserted),
+  };
+};
