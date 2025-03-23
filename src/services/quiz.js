@@ -5,9 +5,10 @@ import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 export const getAllQuiz = async ({ page = 1, perPage = 10 }) => {
   const limit = perPage;
   const skip = (page - 1) * perPage;
+  const quizQuery = QuizCollection.find();
   const quizCount = await QuizCollection.find().countDocuments();
   const paginationData = calculatePaginationData(quizCount, perPage, page);
-  const quiz = await quizCount.skip(skip).limit(limit).exec();
+  const quiz = await quizQuery.skip(skip).limit(limit).exec();
   return { data: quiz, ...paginationData };
 };
 
