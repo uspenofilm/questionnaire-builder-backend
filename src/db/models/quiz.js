@@ -10,7 +10,7 @@ const quizSchema = new Schema(
       type: String,
       required: true,
     },
-    questionsCount: {
+    questionCount: {
       type: Number,
       required: true,
     },

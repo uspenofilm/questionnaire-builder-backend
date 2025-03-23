@@ -1,9 +1,14 @@
 import { QuizCollection } from '../db/models/quiz.js';
 import { Types } from 'mongoose';
+import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 
-export const getAllQuiz = async () => {
-  const quiz = await QuizCollection.find();
-  return quiz;
+export const getAllQuiz = async ({ page = 1, perPage = 10 }) => {
+  const limit = perPage;
+  const skip = (page - 1) * perPage;
+  const quizCount = await QuizCollection.find().countDocuments();
+  const paginationData = calculatePaginationData(quizCount, perPage, page);
+  const quiz = await quizCount.skip(skip).limit(limit).exec();
+  return { data: quiz, ...paginationData };
 };
 
 export const getQuizById = async (quizId) => {

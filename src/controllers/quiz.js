@@ -6,19 +6,15 @@ import {
   updateQuiz,
 } from '../services/quiz.js';
 import createHttpError from 'http-errors';
+import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 
-export const getQuizController = async (req, res, next) => {
-  try {
-    const quiz = await getAllQuiz();
-
-    res.json({
-      status: 200,
-      message: 'Successfully found quiz!',
-      data: quiz,
-    });
-  } catch (err) {
-    next(err);
-  }
+export const getQuizController = async (req, res) => {
+  const { page, perPage } = parsePaginationParams(req.query);
+  const data = await getAllQuiz({
+    page,
+    perPage,
+  });
+  res.json({ status: 200, message: 'Successfully found quiz!', data });
 };
 
 export const getQuizByIdController = async (req, res, next) => {
